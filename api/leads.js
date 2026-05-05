@@ -10,9 +10,29 @@ function isValidEmail(email) {
   return !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    if (req.body) {
+      resolve(typeof req.body === "string" ? req.body : JSON.stringify(req.body));
+      return;
+    }
+
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
+      if (body.length > 1_000_000) {
+        reject(new Error("request_too_large"));
+        req.destroy();
+      }
+    });
+    req.on("end", () => resolve(body));
+    req.on("error", reject);
+  });
+}
+
 async function saveLeadToKv(lead) {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
   if (!url || !token) {
     throw new Error("missing_kv_config");
@@ -28,7 +48,8 @@ async function saveLeadToKv(lead) {
   });
 
   if (!response.ok) {
-    throw new Error("kv_save_failed");
+    const errorText = await response.text();
+    throw new Error(`kv_save_failed:${response.status}:${errorText.slice(0, 120)}`);
   }
 }
 
@@ -39,7 +60,8 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    const body = await readBody(req);
+    const data = body ? JSON.parse(body) : {};
     const phone = String(data.phone || "").trim();
     const email = String(data.email || "").trim();
 
