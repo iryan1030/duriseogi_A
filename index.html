@@ -1498,10 +1498,7 @@
         leadMessage.textContent = "신청 정보가 저장되었습니다. 곧 안내를 보내드릴게요.";
         leadForm.reset();
       } catch (error) {
-        const savedLeads = JSON.parse(localStorage.getItem("duriseogiLeads") || "[]");
-        savedLeads.push(payload);
-        localStorage.setItem("duriseogiLeads", JSON.stringify(savedLeads));
-        leadMessage.textContent = "현재는 브라우저에 임시 저장되었습니다. 서버로 실행하면 leads.json에 저장됩니다.";
+        leadMessage.textContent = "저장에 실패했습니다. 잠시 후 다시 시도해주세요.";
       }
     });
   </script>
