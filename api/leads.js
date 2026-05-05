@@ -1,5 +1,3 @@
-const LEADS_KEY = "duriseogi:leads";
-
 function send(res, status, body) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -30,26 +28,36 @@ function readBody(req) {
   });
 }
 
-async function saveLeadToKv(lead) {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+function getSupabaseConfig() {
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!url || !token) {
-    throw new Error("missing_kv_config");
+  if (!url || !serviceRoleKey) {
+    throw new Error("missing_supabase_config");
   }
 
-  const response = await fetch(url, {
+  return {
+    url: url.replace(/\/$/, ""),
+    serviceRoleKey
+  };
+}
+
+async function saveLeadToSupabase(lead) {
+  const { url, serviceRoleKey } = getSupabaseConfig();
+  const response = await fetch(`${url}/rest/v1/leads`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal"
     },
-    body: JSON.stringify(["RPUSH", LEADS_KEY, JSON.stringify(lead)])
+    body: JSON.stringify(lead)
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`kv_save_failed:${response.status}:${errorText.slice(0, 120)}`);
+    throw new Error(`supabase_save_failed:${response.status}:${errorText.slice(0, 160)}`);
   }
 }
 
@@ -70,12 +78,13 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    await saveLeadToKv({
+    await saveLeadToSupabase({
       phone,
-      email,
+      email: email || null,
       page: String(data.page || "두리서기 랜딩페이지"),
-      createdAt: data.createdAt || new Date().toISOString(),
-      source: "vercel"
+      variant: String(data.variant || "A"),
+      user_agent: String(req.headers["user-agent"] || ""),
+      created_at: data.createdAt || new Date().toISOString()
     });
 
     send(res, 201, { ok: true });
