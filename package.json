@@ -1,0 +1,20 @@
+{
+  "name": "duriseogi-a",
+  "version": "1.0.0",
+  "description": "두리서기 | 익명 편지교류 서비스",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'No build step required for static site'"
+  },
+  "keywords": [
+    "landing-page",
+    "korean",
+    "letter-exchange"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
