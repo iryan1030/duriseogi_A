@@ -827,7 +827,44 @@
       .trust-grid { grid-template-columns: 1fr; }
       .trust-item { min-height: auto; }
       .final-cta { min-height: 76svh; }
-      .lead-dialog { padding: 24px; }
+      .lead-modal { padding: 14px; }
+      .lead-dialog {
+        width: min(100%, 350px);
+        max-height: calc(100svh - 28px);
+        padding: 18px;
+        overflow-y: auto;
+      }
+      .lead-close {
+        right: 10px;
+        top: 10px;
+        width: 28px;
+        height: 28px;
+      }
+      .lead-dialog h2 {
+        padding-right: 28px;
+        font-size: 1.16rem;
+        line-height: 1.28;
+      }
+      .lead-dialog p {
+        margin-top: 8px;
+        font-size: 0.82rem;
+        line-height: 1.52;
+      }
+      .lead-form {
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .lead-field {
+        gap: 5px;
+        font-size: 0.8rem;
+      }
+      .lead-field input {
+        min-height: 42px;
+        padding: 0 11px;
+      }
+      .lead-submit {
+        min-height: 44px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
