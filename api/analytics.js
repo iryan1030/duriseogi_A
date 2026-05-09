@@ -96,10 +96,11 @@ module.exports = async function handler(req, res) {
       supabaseSelect("leads?select=id,variant,created_at&order=created_at.desc&limit=10000")
     ]);
 
-    const pageViews = events.filter((event) => event.event_name === "page_view");
-    const ctaClicks = events.filter((event) => event.event_name === "cta_click");
-    const leadSubmitEvents = events.filter((event) => event.event_name === "lead_submit");
-    const stayDurations = events
+    const productionEvents = events.filter((event) => event.page !== "/debug");
+    const pageViews = productionEvents.filter((event) => event.event_name === "page_view");
+    const ctaClicks = productionEvents.filter((event) => event.event_name === "cta_click");
+    const leadSubmitEvents = productionEvents.filter((event) => event.event_name === "lead_submit");
+    const stayDurations = productionEvents
       .filter((event) => event.event_name === "stay_duration")
       .map((event) => Number(event.duration_seconds));
     const visitorIds = new Set(pageViews.map((event) => event.session_id).filter(Boolean));
