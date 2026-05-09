@@ -105,7 +105,8 @@ module.exports = async function handler(req, res) {
       .map((event) => Number(event.duration_seconds));
     const visitorIds = new Set(pageViews.map((event) => event.session_id).filter(Boolean));
     const visitorCount = visitorIds.size || pageViews.length;
-    const submitCount = leads.length || leadSubmitEvents.length;
+    const submitCount = leads.length;
+    const trackedSubmitCount = leadSubmitEvents.length;
     const dateKeys = getLastDateKeys(7);
     const daily = dateKeys.map((date) => {
       const dailyPageViews = pageViews.filter((event) => toDateKey(event.created_at) === date);
@@ -129,10 +130,10 @@ module.exports = async function handler(req, res) {
         averageStaySeconds: average(stayDurations),
         ctaClicks: ctaClicks.length,
         submits: submitCount,
-        leadSubmitEvents: leadSubmitEvents.length,
+        trackedSubmits: trackedSubmitCount,
         ctaClickRate: percent(ctaClicks.length, visitorCount),
-        conversionRate: percent(submitCount, visitorCount),
-        submitRateAfterClick: percent(submitCount, ctaClicks.length)
+        conversionRate: percent(trackedSubmitCount, visitorCount),
+        submitRateAfterClick: percent(trackedSubmitCount, ctaClicks.length)
       },
       daily
     });

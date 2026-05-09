@@ -1392,12 +1392,16 @@
       }).catch(() => {});
     }
 
-    function trackDuration() {
-      if (durationTracked) return;
-      durationTracked = true;
+    function getStayDurationSeconds() {
+      return Math.max(0, Math.round((Date.now() - analyticsStartedAt) / 1000));
+    }
+
+    function trackDuration({ final = true } = {}) {
+      if (final && durationTracked) return;
+      if (final) durationTracked = true;
       trackEvent("stay_duration", {
-        durationSeconds: Math.max(0, Math.round((Date.now() - analyticsStartedAt) / 1000)),
-        keepalive: true
+        durationSeconds: getStayDurationSeconds(),
+        keepalive: final
       });
     }
 
@@ -1524,6 +1528,7 @@
     function openLeadModal(event) {
       event.preventDefault();
       trackEvent("cta_click");
+      trackDuration({ final: false });
       leadModal.classList.add("is-open");
       leadModal.setAttribute("aria-hidden", "false");
       leadMessage.textContent = "";
@@ -1568,6 +1573,7 @@
 
         if (!response.ok) throw new Error("server_error");
         trackEvent("lead_submit");
+        trackDuration({ final: false });
         leadMessage.textContent = "신청 정보가 저장되었습니다. 곧 안내를 보내드릴게요.";
         leadForm.reset();
       } catch (error) {
