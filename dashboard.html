@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>두리서기 A안 대시보드</title>
+  <style>
+    :root {
+      --ink: #242331;
+      --muted: #74717f;
+      --line: #e6e1dc;
+      --paper: #fffaf4;
+      --surface: #ffffff;
+      --accent: #59508c;
+      --accent-soft: #cbc5e1;
+      --success: #477d68;
+      --shadow: 0 18px 50px rgba(52, 45, 65, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 250, 244, 0.94), rgba(250, 246, 239, 0.98)),
+        radial-gradient(circle at 16% 0%, rgba(203, 197, 225, 0.34), transparent 36%);
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .subtext {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .refresh {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      padding: 12px 18px;
+      box-shadow: 0 10px 26px rgba(52, 45, 65, 0.08);
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card,
+    .panel {
+      border: 1px solid rgba(230, 225, 220, 0.88);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-card {
+      min-height: 152px;
+      padding: 22px;
+    }
+
+    .metric-label {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .metric-value {
+      display: block;
+      font-size: clamp(2.15rem, 4vw, 3.25rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .metric-note {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .panel {
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.22rem;
+    }
+
+    .updated {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .rate-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .rate-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: var(--paper);
+    }
+
+    .rate-item strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .chart {
+      display: grid;
+      gap: 14px;
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 120px;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .bar {
+      position: relative;
+      height: 16px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #efebe6;
+    }
+
+    .bar span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--width);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    }
+
+    .empty,
+    .error {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .error { color: #9a3e44; }
+
+    @media (max-width: 860px) {
+      main {
+        width: min(100% - 28px, 680px);
+        padding-top: 34px;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .summary-grid,
+      .rate-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .chart-row {
+        grid-template-columns: 74px 1fr;
+      }
+
+      .chart-row .count {
+        grid-column: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      main { width: min(100% - 24px, 420px); }
+
+      .summary-grid,
+      .rate-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-card {
+        min-height: auto;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Landing Page A</p>
+        <h1>두리서기 대시보드</h1>
+        <p class="subtext">방문, 체류시간, CTA 클릭, 신청 제출을 집계합니다.</p>
+      </div>
+      <button class="refresh" type="button" id="refreshButton">새로고침</button>
+    </header>
+
+    <section class="summary-grid" aria-label="핵심 지표">
+      <article class="metric-card">
+        <span class="metric-label">웹사이트 방문자 수</span>
+        <strong class="metric-value" id="visitors">-</strong>
+        <span class="metric-note">세션 기준 고유 방문</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">평균 체류 시간</span>
+        <strong class="metric-value" id="stay">-</strong>
+        <span class="metric-note">페이지 이탈 시 기록</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">CTA 클릭 수</span>
+        <strong class="metric-value" id="ctaClicks">-</strong>
+        <span class="metric-note">모달을 연 클릭</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">정보 제출 수</span>
+        <strong class="metric-value" id="submits">-</strong>
+        <span class="metric-note">leads 저장 기준</span>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>전환 흐름</h2>
+        <span class="updated" id="updatedAt">-</span>
+      </div>
+      <div class="rate-grid">
+        <div class="rate-item">
+          방문 대비 CTA 클릭률
+          <strong id="ctaRate">-</strong>
+        </div>
+        <div class="rate-item">
+          방문 대비 제출 전환율
+          <strong id="conversionRate">-</strong>
+        </div>
+        <div class="rate-item">
+          CTA 클릭 후 제출률
+          <strong id="submitAfterClick">-</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>최근 7일 흐름</h2>
+        <span class="updated">방문자 기준</span>
+      </div>
+      <div class="chart" id="dailyChart">
+        <div class="empty">데이터를 불러오는 중입니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const elements = {
+      visitors: document.getElementById("visitors"),
+      stay: document.getElementById("stay"),
+      ctaClicks: document.getElementById("ctaClicks"),
+      submits: document.getElementById("submits"),
+      ctaRate: document.getElementById("ctaRate"),
+      conversionRate: document.getElementById("conversionRate"),
+      submitAfterClick: document.getElementById("submitAfterClick"),
+      updatedAt: document.getElementById("updatedAt"),
+      dailyChart: document.getElementById("dailyChart"),
+      refreshButton: document.getElementById("refreshButton")
+    };
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat("ko-KR").format(value || 0);
+    }
+
+    function formatDuration(seconds) {
+      if (!seconds) return "0초";
+      if (seconds < 60) return `${seconds}초`;
+      const minutes = Math.floor(seconds / 60);
+      const restSeconds = seconds % 60;
+      return restSeconds ? `${minutes}분 ${restSeconds}초` : `${minutes}분`;
+    }
+
+    function formatPercent(value) {
+      return `${Number(value || 0).toFixed(1)}%`;
+    }
+
+    function formatDateTime(value) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }).format(new Date(value));
+    }
+
+    function renderDailyChart(daily) {
+      const maxVisitors = Math.max(1, ...daily.map((item) => item.visitors));
+      elements.dailyChart.innerHTML = daily.map((item) => {
+        const width = Math.max(4, Math.round((item.visitors / maxVisitors) * 100));
+        return `
+          <div class="chart-row">
+            <span>${item.date.slice(5)}</span>
+            <div class="bar" aria-label="${item.date} 방문자 ${item.visitors}명">
+              <span style="--width: ${width}%"></span>
+            </div>
+            <span class="count">방문 ${formatNumber(item.visitors)} · 클릭 ${formatNumber(item.ctaClicks)} · 제출 ${formatNumber(item.submits)}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadAnalytics() {
+      elements.refreshButton.disabled = true;
+      elements.refreshButton.textContent = "불러오는 중";
+
+      try {
+        const token = window.localStorage.getItem("duriseogi_dashboard_token") || "";
+        const response = await fetch("/api/analytics", {
+          headers: token ? { "x-dashboard-token": token } : {}
+        });
+
+        if (response.status === 401) {
+          const nextToken = window.prompt("대시보드 접근 토큰을 입력해주세요.");
+          if (nextToken) {
+            window.localStorage.setItem("duriseogi_dashboard_token", nextToken);
+            return loadAnalytics();
+          }
+        }
+
+        if (!response.ok) throw new Error("analytics_failed");
+        const data = await response.json();
+        const totals = data.totals;
+
+        elements.visitors.textContent = formatNumber(totals.visitors);
+        elements.stay.textContent = formatDuration(totals.averageStaySeconds);
+        elements.ctaClicks.textContent = formatNumber(totals.ctaClicks);
+        elements.submits.textContent = formatNumber(totals.submits);
+        elements.ctaRate.textContent = formatPercent(totals.ctaClickRate);
+        elements.conversionRate.textContent = formatPercent(totals.conversionRate);
+        elements.submitAfterClick.textContent = formatPercent(totals.submitRateAfterClick);
+        elements.updatedAt.textContent = `업데이트 ${formatDateTime(data.updatedAt)}`;
+        renderDailyChart(data.daily);
+      } catch (error) {
+        elements.dailyChart.innerHTML = `<div class="error">대시보드 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>`;
+      } finally {
+        elements.refreshButton.disabled = false;
+        elements.refreshButton.textContent = "새로고침";
+      }
+    }
+
+    elements.refreshButton.addEventListener("click", loadAnalytics);
+    loadAnalytics();
+  </script>
+</body>
+</html>
