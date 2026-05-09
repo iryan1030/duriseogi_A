@@ -1354,6 +1354,58 @@
     let isLocked = false;
     let touchStartX = 0;
     let touchStartY = 0;
+    const analyticsSessionId = (() => {
+      const key = "duriseogi_session_id";
+      const existingId = window.sessionStorage.getItem(key);
+      if (existingId) return existingId;
+      const nextId = window.crypto && window.crypto.randomUUID
+        ? window.crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      window.sessionStorage.setItem(key, nextId);
+      return nextId;
+    })();
+    const analyticsStartedAt = Date.now();
+    let durationTracked = false;
+
+    function trackEvent(eventName, extra = {}) {
+      const payload = {
+        eventName,
+        sessionId: analyticsSessionId,
+        variant: "A",
+        page: window.location.pathname || "/",
+        referrer: document.referrer || "",
+        createdAt: new Date().toISOString(),
+        ...extra
+      };
+      const body = JSON.stringify(payload);
+
+      if (extra.keepalive && navigator.sendBeacon) {
+        const blob = new Blob([body], { type: "application/json" });
+        if (navigator.sendBeacon("/api/events", blob)) return;
+      }
+
+      fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        keepalive: Boolean(extra.keepalive)
+      }).catch(() => {});
+    }
+
+    function trackDuration() {
+      if (durationTracked) return;
+      durationTracked = true;
+      trackEvent("stay_duration", {
+        durationSeconds: Math.max(0, Math.round((Date.now() - analyticsStartedAt) / 1000)),
+        keepalive: true
+      });
+    }
+
+    trackEvent("page_view");
+    window.addEventListener("pagehide", trackDuration);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") trackDuration();
+    });
 
     function updateHeaderState() {
       siteHeader.classList.toggle("is-scrolled", window.scrollY > 24);
@@ -1471,6 +1523,7 @@
 
     function openLeadModal(event) {
       event.preventDefault();
+      trackEvent("cta_click");
       leadModal.classList.add("is-open");
       leadModal.setAttribute("aria-hidden", "false");
       leadMessage.textContent = "";
@@ -1514,6 +1567,7 @@
         });
 
         if (!response.ok) throw new Error("server_error");
+        trackEvent("lead_submit");
         leadMessage.textContent = "신청 정보가 저장되었습니다. 곧 안내를 보내드릴게요.";
         leadForm.reset();
       } catch (error) {
