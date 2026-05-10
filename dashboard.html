@@ -224,7 +224,6 @@
       box-shadow: 0 0 20px rgba(107, 98, 242, 0.75);
     }
 
-    h1,
     h2,
     h3 {
       margin: 0;
@@ -232,13 +231,15 @@
       letter-spacing: normal;
     }
 
-    h1 {
-      max-width: 720px;
+    .dashboard-heading {
+      margin: 0;
+      max-width: 620px;
       color: var(--white);
-      font-size: clamp(28px, 3.4vw, 44px);
-      font-weight: 500;
-      line-height: 1;
-      letter-spacing: -0.035em;
+      font-family: var(--font-body);
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0.2px;
     }
 
     .hero-copy p {
@@ -613,7 +614,7 @@
         border-radius: 22px;
       }
 
-      h1 { font-size: 30px; }
+      .dashboard-heading { font-size: 22px; }
 
       .metric-grid,
       .rate-grid {
@@ -665,7 +666,7 @@
       <section class="hero-panel">
         <div class="hero-copy">
           <p class="eyebrow">Command Center</p>
-          <h1>전환 상황을 한 화면에서 봅니다.</h1>
+          <h1 class="dashboard-heading">전환 상황을 한 화면에서 봅니다.</h1>
           <p>방문, 체류, CTA 클릭, 신청 제출을 같은 콘솔에서 확인합니다. 현재 화면은 자동 갱신하지 않고, 열 때와 새로고침 버튼을 누를 때 최신값을 가져옵니다.</p>
           <div class="status-row">
             <span class="status-chip">Variant A</span>
