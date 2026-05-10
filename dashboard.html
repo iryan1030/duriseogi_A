@@ -52,144 +52,59 @@
       mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.88), transparent 86%);
     }
 
-    button {
-      font: inherit;
-    }
+    button { font: inherit; }
 
     .admin-shell {
       position: relative;
-      display: grid;
-      grid-template-columns: 256px minmax(0, 1fr);
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 18px 14px;
-      border-right: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.34);
-      backdrop-filter: blur(4px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 6px 20px;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--white);
-      font-family: var(--font-heading);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .brand strong {
-      display: block;
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-
-    .brand span {
-      display: block;
-      margin-top: 3px;
-      color: var(--slate);
-      font-size: 12px;
-      line-height: 1.4;
-    }
-
-    .nav-label {
-      margin: 18px 8px 8px;
-      color: var(--slate);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 6px;
-      padding: 10px 12px;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--ash);
-      text-decoration: none;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .nav-item.is-active {
-      border-color: var(--line);
-      background: rgba(212, 212, 212, 0.1);
-      color: var(--white);
-    }
-
-    .nav-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--slate);
-    }
-
-    .nav-item.is-active .nav-dot {
-      background: radial-gradient(circle, var(--white), var(--glow));
-      box-shadow: 0 0 18px rgba(107, 98, 242, 0.72);
-    }
-
-    .sidebar-foot {
-      position: absolute;
-      right: 16px;
-      bottom: 20px;
-      left: 16px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(212, 212, 212, 0.08);
-      color: var(--ash);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .content {
-      min-width: 0;
-      padding: 18px;
+      width: min(1280px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 18px 0 40px;
     }
 
     .topbar {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      min-height: 46px;
+      gap: 14px;
+      min-height: 50px;
       margin-bottom: 14px;
-      padding: 8px 8px 8px 18px;
+      padding: 8px 8px 8px 16px;
       border: 1px solid var(--line);
       border-radius: 9999px;
       background: rgba(0, 0, 0, 0.28);
       backdrop-filter: blur(4px);
     }
 
+    .brand-row {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
     .breadcrumb {
+      min-width: 0;
+      overflow: hidden;
       color: var(--ash);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.5;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .breadcrumb strong {
@@ -204,7 +119,8 @@
     }
 
     .pill,
-    .ghost-button {
+    .ghost-button,
+    .tab-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -224,12 +140,42 @@
       cursor: pointer;
     }
 
-    .ghost-button {
+    .ghost-button,
+    .tab-button {
       border: 1px solid var(--line-strong);
       background: transparent;
       color: var(--white);
       text-decoration: none;
     }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.24);
+      width: max-content;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .tab-button {
+      cursor: pointer;
+      color: var(--ash);
+      border-color: transparent;
+    }
+
+    .tab-button.is-active {
+      border-color: rgba(255, 255, 255, 0.82);
+      background: var(--white);
+      color: var(--storm);
+    }
+
+    .view { display: none; }
+    .view.is-active { display: block; }
 
     .hero-panel {
       display: grid;
@@ -249,7 +195,7 @@
     }
 
     .hero-copy {
-      min-height: 190px;
+      min-height: 184px;
       padding: 22px;
       border-radius: 28px;
       background:
@@ -296,7 +242,7 @@
     }
 
     .hero-copy p {
-      max-width: 660px;
+      max-width: 700px;
       margin: 12px 0 0;
       color: var(--silver);
       font-size: 14px;
@@ -326,8 +272,8 @@
 
     .system-card {
       display: grid;
-      align-content: space-between;
-      min-height: 190px;
+      align-content: start;
+      min-height: 184px;
       padding: 18px;
       border-radius: 24px;
       background: rgba(0, 0, 0, 0.22);
@@ -358,11 +304,7 @@
     }
 
     .system-item:last-child { border-bottom: 0; }
-
-    .system-value {
-      color: var(--white);
-      font-weight: 700;
-    }
+    .system-value { color: var(--white); font-weight: 700; }
 
     .metric-grid {
       display: grid;
@@ -398,6 +340,7 @@
       border-radius: 10px;
       color: var(--white);
       background: rgba(0, 0, 0, 0.2);
+      font-size: 12px;
     }
 
     .metric-value {
@@ -427,6 +370,10 @@
     .panel {
       padding: 16px;
       border-radius: 18px;
+    }
+
+    .panel + .panel {
+      margin-top: 12px;
     }
 
     .panel-header {
@@ -481,19 +428,27 @@
       font-weight: 700;
     }
 
-    .funnel-bar {
-      height: 10px;
+    .funnel-bar,
+    .spark-bar {
       overflow: hidden;
-      border: 1px solid rgba(229, 229, 229, 0.1);
       border-radius: 9999px;
-      background: rgba(0, 0, 0, 0.32);
+      background: rgba(0, 0, 0, 0.34);
     }
 
-    .funnel-bar span {
+    .funnel-bar {
+      height: 10px;
+      border: 1px solid rgba(229, 229, 229, 0.1);
+    }
+
+    .funnel-bar span,
+    .spark-bar span {
       display: block;
       width: var(--width);
       height: 100%;
       border-radius: inherit;
+    }
+
+    .funnel-bar span {
       background: linear-gradient(90deg, rgba(107, 98, 242, 0.9), rgba(255, 255, 255, 0.86));
       box-shadow: 0 0 20px rgba(107, 98, 242, 0.38);
     }
@@ -568,6 +523,16 @@
 
     tr:last-child td { border-bottom: 0; }
 
+    .lead-phone {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .lead-email {
+      color: var(--silver);
+      text-transform: none;
+    }
+
     .spark {
       display: grid;
       gap: 8px;
@@ -582,18 +547,9 @@
       font-size: 13px;
     }
 
-    .spark-bar {
-      height: 9px;
-      overflow: hidden;
-      border-radius: 9999px;
-      background: rgba(0, 0, 0, 0.34);
-    }
+    .spark-bar { height: 9px; }
 
     .spark-bar span {
-      display: block;
-      width: var(--width);
-      height: 100%;
-      border-radius: inherit;
       background: linear-gradient(90deg, var(--blue), var(--silver), var(--warm));
     }
 
@@ -615,54 +571,26 @@
 
     .error { color: #f0b9b9; }
 
-    @media (max-width: 1120px) {
-      .admin-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: relative;
-        height: auto;
-        padding: 14px;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .brand {
-        padding-bottom: 12px;
-      }
-
-      .nav-label,
-      .sidebar-foot {
-        display: none;
-      }
-
-      .nav-stack {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 2px;
-      }
-
-      .nav-item {
-        width: auto;
-        min-width: max-content;
-      }
-
+    @media (max-width: 980px) {
       .hero-panel,
       .dashboard-grid {
         grid-template-columns: 1fr;
       }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 760px) {
-      .content {
-        padding: 12px;
+      .admin-shell {
+        width: min(100% - 24px, 520px);
+        padding-top: 12px;
       }
 
       .topbar {
         align-items: stretch;
-        flex-direction: column;
+        grid-template-columns: 1fr;
         border-radius: 24px;
         padding: 12px;
       }
@@ -671,15 +599,21 @@
         flex-wrap: wrap;
       }
 
+      .tabs {
+        width: 100%;
+      }
+
+      .tab-button {
+        flex: 1 0 auto;
+      }
+
       .hero-copy {
         min-height: auto;
         padding: 18px;
         border-radius: 22px;
       }
 
-      h1 {
-        font-size: 30px;
-      }
+      h1 { font-size: 30px; }
 
       .metric-grid,
       .rate-grid {
@@ -710,51 +644,25 @@
   </style>
 </head>
 <body>
-  <div class="admin-shell">
-    <aside class="sidebar" aria-label="관리 메뉴">
-      <div class="brand">
+  <main class="admin-shell">
+    <div class="topbar">
+      <div class="brand-row">
         <div class="brand-mark">DS</div>
-        <div>
-          <strong>두리서기 Admin</strong>
-          <span>Landing A Console</span>
-        </div>
+        <div class="breadcrumb">두리서기 / <strong>랜딩페이지 A</strong> / Admin</div>
       </div>
-
-      <div class="nav-label">Workspace</div>
-      <nav class="nav-stack">
-        <a class="nav-item is-active" href="#overview">
-          Overview
-          <span class="nav-dot"></span>
-        </a>
-        <a class="nav-item" href="#funnel">
-          Funnel
-          <span class="nav-dot"></span>
-        </a>
-        <a class="nav-item" href="#trend">
-          Trend
-          <span class="nav-dot"></span>
-        </a>
-        <a class="nav-item" href="#health">
-          System
-          <span class="nav-dot"></span>
-        </a>
-      </nav>
-
-      <div class="sidebar-foot">
-        Supabase 집계 API를 통해 개인정보 없이 운영 지표만 확인합니다.
+      <div class="top-actions">
+        <a class="ghost-button" href="/" target="_blank" rel="noreferrer">랜딩페이지 열기</a>
+        <button class="pill" type="button" id="refreshButton">새로고침</button>
       </div>
-    </aside>
+    </div>
 
-    <main class="content">
-      <div class="topbar">
-        <div class="breadcrumb">두리서기 / <strong>랜딩페이지 A</strong> / Analytics</div>
-        <div class="top-actions">
-          <a class="ghost-button" href="/" target="_blank" rel="noreferrer">랜딩페이지 열기</a>
-          <button class="pill" type="button" id="refreshButton">새로고침</button>
-        </div>
-      </div>
+    <div class="tabs" role="tablist" aria-label="대시보드 보기">
+      <button class="tab-button is-active" type="button" data-view-target="overviewView">성과 요약</button>
+      <button class="tab-button" type="button" data-view-target="leadsView">신청자 목록</button>
+    </div>
 
-      <section class="hero-panel" id="overview">
+    <section class="view is-active" id="overviewView">
+      <section class="hero-panel">
         <div class="hero-copy">
           <p class="eyebrow">Command Center</p>
           <h1>전환 상황을 한 화면에서 봅니다.</h1>
@@ -766,7 +674,7 @@
           </div>
         </div>
 
-        <aside class="system-card" id="health">
+        <aside class="system-card">
           <div>
             <h2>데이터 상태</h2>
             <div class="system-list">
@@ -827,7 +735,7 @@
       </section>
 
       <section class="dashboard-grid">
-        <div class="panel" id="funnel">
+        <div class="panel">
           <div class="panel-header">
             <div>
               <h2 class="panel-title">전환 퍼널</h2>
@@ -856,7 +764,7 @@
           </div>
         </div>
 
-        <div class="panel" id="trend">
+        <div class="panel">
           <div class="panel-header">
             <div>
               <h2 class="panel-title">최근 7일 흐름</h2>
@@ -869,7 +777,7 @@
         </div>
       </section>
 
-      <section class="panel" style="margin-top: 16px;">
+      <section class="panel">
         <div class="panel-header">
           <div>
             <h2 class="panel-title">일자별 운영 테이블</h2>
@@ -896,8 +804,38 @@
           </table>
         </div>
       </section>
-    </main>
-  </div>
+    </section>
+
+    <section class="view" id="leadsView">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">신청자 목록</h2>
+            <div class="panel-subtitle">전화번호와 이메일은 개인정보라 대시보드 토큰이 있어야 표시됩니다.</div>
+          </div>
+          <div class="updated" id="leadsUpdated">-</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>제출 시각</th>
+                <th>전화번호</th>
+                <th>이메일</th>
+                <th>페이지</th>
+                <th>버전</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTable">
+              <tr>
+                <td colspan="5">신청자 데이터를 불러오려면 새로고침을 눌러주세요.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
 
   <script>
     const elements = {
@@ -910,13 +848,27 @@
       submitAfterClick: document.getElementById("submitAfterClick"),
       updatedAt: document.getElementById("updatedAt"),
       funnelUpdated: document.getElementById("funnelUpdated"),
+      leadsUpdated: document.getElementById("leadsUpdated"),
       eventHealth: document.getElementById("eventHealth"),
       leadHealth: document.getElementById("leadHealth"),
       dailyChart: document.getElementById("dailyChart"),
       dailyTable: document.getElementById("dailyTable"),
+      leadsTable: document.getElementById("leadsTable"),
       funnelChart: document.getElementById("funnelChart"),
-      refreshButton: document.getElementById("refreshButton")
+      refreshButton: document.getElementById("refreshButton"),
+      tabs: Array.from(document.querySelectorAll("[data-view-target]")),
+      views: Array.from(document.querySelectorAll(".view"))
     };
+
+    let activeView = "overviewView";
+
+    function getDashboardToken() {
+      return window.localStorage.getItem("duriseogi_dashboard_token") || "";
+    }
+
+    function saveDashboardToken(token) {
+      window.localStorage.setItem("duriseogi_dashboard_token", token);
+    }
 
     function formatNumber(value) {
       return new Intl.NumberFormat("ko-KR").format(value || 0);
@@ -944,6 +896,25 @@
         dateStyle: "medium",
         timeStyle: "short"
       }).format(new Date(value));
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function setActiveView(viewId) {
+      activeView = viewId;
+      elements.tabs.forEach((tab) => {
+        tab.classList.toggle("is-active", tab.dataset.viewTarget === viewId);
+      });
+      elements.views.forEach((view) => {
+        view.classList.toggle("is-active", view.id === viewId);
+      });
     }
 
     function renderFunnel(totals) {
@@ -1004,56 +975,124 @@
       }).join("");
     }
 
+    function renderLeads(leads) {
+      if (!leads.length) {
+        elements.leadsTable.innerHTML = `<tr><td colspan="5">아직 제출된 신청자가 없습니다.</td></tr>`;
+        return;
+      }
+
+      elements.leadsTable.innerHTML = leads.map((lead) => `
+        <tr>
+          <td>${formatDateTime(lead.created_at)}</td>
+          <td class="lead-phone">${escapeHtml(lead.phone)}</td>
+          <td class="lead-email">${escapeHtml(lead.email || "미입력")}</td>
+          <td>${escapeHtml(lead.page || "-")}</td>
+          <td>${escapeHtml(lead.variant || "A")}</td>
+        </tr>
+      `).join("");
+    }
+
     async function loadAnalytics() {
+      const token = getDashboardToken();
+      const response = await fetch("/api/analytics", {
+        headers: token ? { "x-dashboard-token": token } : {}
+      });
+
+      if (response.status === 401) {
+        const nextToken = window.prompt("대시보드 접근 토큰을 입력해주세요.");
+        if (nextToken) {
+          saveDashboardToken(nextToken);
+          return loadAnalytics();
+        }
+      }
+
+      if (!response.ok) throw new Error("analytics_failed");
+      const data = await response.json();
+      const totals = data.totals;
+
+      elements.visitors.textContent = formatNumber(totals.visitors);
+      elements.stay.textContent = formatDuration(totals.averageStaySeconds);
+      elements.ctaClicks.textContent = formatNumber(totals.ctaClicks);
+      elements.submits.textContent = formatNumber(totals.submits);
+      elements.ctaRate.textContent = formatPercent(totals.ctaClickRate);
+      elements.conversionRate.textContent = formatPercent(totals.conversionRate);
+      elements.submitAfterClick.textContent = formatPercent(totals.submitRateAfterClick);
+      elements.updatedAt.textContent = `업데이트 ${formatDateTime(data.updatedAt)}`;
+      elements.funnelUpdated.textContent = formatDateTime(data.updatedAt);
+      elements.eventHealth.textContent = totals.pageViews || totals.ctaClicks ? "정상" : "대기";
+      elements.leadHealth.textContent = totals.submits ? "정상" : "대기";
+
+      renderFunnel(totals);
+      renderDailyChart(data.daily);
+      renderDailyTable(data.daily);
+    }
+
+    async function loadLeads() {
+      let token = getDashboardToken();
+      if (!token) {
+        token = window.prompt("신청자 목록을 보려면 대시보드 접근 토큰을 입력해주세요.") || "";
+        if (token) saveDashboardToken(token);
+      }
+
+      const response = await fetch("/api/leads-list", {
+        headers: token ? { "x-dashboard-token": token } : {}
+      });
+
+      if (response.status === 403) {
+        elements.leadsTable.innerHTML = `<tr><td colspan="5">Vercel Environment Variables에 DASHBOARD_TOKEN을 먼저 추가해야 신청자 목록을 볼 수 있습니다.</td></tr>`;
+        elements.leadsUpdated.textContent = "토큰 설정 필요";
+        return;
+      }
+
+      if (response.status === 401) {
+        window.localStorage.removeItem("duriseogi_dashboard_token");
+        elements.leadsTable.innerHTML = `<tr><td colspan="5">토큰이 올바르지 않습니다. 새로고침 후 다시 입력해주세요.</td></tr>`;
+        elements.leadsUpdated.textContent = "인증 실패";
+        return;
+      }
+
+      if (!response.ok) throw new Error("leads_failed");
+      const data = await response.json();
+      renderLeads(data.leads || []);
+      elements.leadsUpdated.textContent = `업데이트 ${formatDateTime(data.updatedAt)}`;
+    }
+
+    async function refreshCurrentView() {
       elements.refreshButton.disabled = true;
       elements.refreshButton.textContent = "동기화 중";
 
       try {
-        const token = window.localStorage.getItem("duriseogi_dashboard_token") || "";
-        const response = await fetch("/api/analytics", {
-          headers: token ? { "x-dashboard-token": token } : {}
-        });
-
-        if (response.status === 401) {
-          const nextToken = window.prompt("대시보드 접근 토큰을 입력해주세요.");
-          if (nextToken) {
-            window.localStorage.setItem("duriseogi_dashboard_token", nextToken);
-            return loadAnalytics();
-          }
+        if (activeView === "leadsView") {
+          await loadLeads();
+        } else {
+          await loadAnalytics();
         }
-
-        if (!response.ok) throw new Error("analytics_failed");
-        const data = await response.json();
-        const totals = data.totals;
-
-        elements.visitors.textContent = formatNumber(totals.visitors);
-        elements.stay.textContent = formatDuration(totals.averageStaySeconds);
-        elements.ctaClicks.textContent = formatNumber(totals.ctaClicks);
-        elements.submits.textContent = formatNumber(totals.submits);
-        elements.ctaRate.textContent = formatPercent(totals.ctaClickRate);
-        elements.conversionRate.textContent = formatPercent(totals.conversionRate);
-        elements.submitAfterClick.textContent = formatPercent(totals.submitRateAfterClick);
-        elements.updatedAt.textContent = `업데이트 ${formatDateTime(data.updatedAt)}`;
-        elements.funnelUpdated.textContent = formatDateTime(data.updatedAt);
-        elements.eventHealth.textContent = totals.pageViews || totals.ctaClicks ? "정상" : "대기";
-        elements.leadHealth.textContent = totals.submits ? "정상" : "대기";
-
-        renderFunnel(totals);
-        renderDailyChart(data.daily);
-        renderDailyTable(data.daily);
       } catch (error) {
-        elements.eventHealth.textContent = "오류";
-        elements.leadHealth.textContent = "오류";
-        elements.funnelChart.innerHTML = `<div class="error">대시보드 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>`;
-        elements.dailyChart.innerHTML = `<div class="error">대시보드 데이터를 불러오지 못했습니다.</div>`;
-        elements.dailyTable.innerHTML = `<tr><td colspan="6">대시보드 데이터를 불러오지 못했습니다.</td></tr>`;
+        if (activeView === "leadsView") {
+          elements.leadsTable.innerHTML = `<tr><td colspan="5">신청자 데이터를 불러오지 못했습니다.</td></tr>`;
+        } else {
+          elements.eventHealth.textContent = "오류";
+          elements.leadHealth.textContent = "오류";
+          elements.funnelChart.innerHTML = `<div class="error">대시보드 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>`;
+          elements.dailyChart.innerHTML = `<div class="error">대시보드 데이터를 불러오지 못했습니다.</div>`;
+          elements.dailyTable.innerHTML = `<tr><td colspan="6">대시보드 데이터를 불러오지 못했습니다.</td></tr>`;
+        }
       } finally {
         elements.refreshButton.disabled = false;
         elements.refreshButton.textContent = "새로고침";
       }
     }
 
-    elements.refreshButton.addEventListener("click", loadAnalytics);
+    elements.tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setActiveView(tab.dataset.viewTarget);
+        if (activeView === "leadsView") loadLeads().catch(() => {
+          elements.leadsTable.innerHTML = `<tr><td colspan="5">신청자 데이터를 불러오지 못했습니다.</td></tr>`;
+        });
+      });
+    });
+
+    elements.refreshButton.addEventListener("click", refreshCurrentView);
     loadAnalytics();
   </script>
 </body>
