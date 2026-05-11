@@ -738,6 +738,29 @@
       font-size: 0.86rem;
       line-height: 1.5;
     }
+    .thanks-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 70;
+      display: none;
+      width: min(calc(100% - 32px), 360px);
+      padding: 14px 18px;
+      color: #1f2937;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(141, 134, 189, 0.24);
+      border-radius: 999px;
+      box-shadow: 0 18px 50px rgba(31, 41, 55, 0.18);
+      transform: translate(-50%, 14px);
+      opacity: 0;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .thanks-toast.is-visible {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
 
     @media (max-width: 1080px) {
       h1 { font-size: 2.66rem; }
@@ -1335,6 +1358,7 @@
       </form>
     </div>
   </div>
+  <div class="thanks-toast" id="thanksToast" role="status" aria-live="polite">신청해주셔서 감사합니다.</div>
 
   <script>
     const siteHeader = document.querySelector(".site-header");
@@ -1348,12 +1372,14 @@
     const leadModal = document.getElementById("leadModal");
     const leadForm = document.getElementById("leadForm");
     const leadMessage = document.getElementById("leadMessage");
+    const thanksToast = document.getElementById("thanksToast");
     const totalSlides = slides.length;
     let currentSlide = 0;
     let currentTweet = 0;
     let isLocked = false;
     let touchStartX = 0;
     let touchStartY = 0;
+    let thanksTimer;
     const analyticsSessionId = (() => {
       const key = "duriseogi_session_id";
       const existingId = window.sessionStorage.getItem(key);
@@ -1540,6 +1566,14 @@
       leadModal.setAttribute("aria-hidden", "true");
     }
 
+    function showThanksToast() {
+      window.clearTimeout(thanksTimer);
+      thanksToast.classList.add("is-visible");
+      thanksTimer = window.setTimeout(() => {
+        thanksToast.classList.remove("is-visible");
+      }, 3200);
+    }
+
     document.querySelectorAll("[data-open-lead]").forEach((button) => {
       button.addEventListener("click", openLeadModal);
     });
@@ -1574,8 +1608,9 @@
         if (!response.ok) throw new Error("server_error");
         trackEvent("lead_submit");
         trackDuration({ final: false });
-        leadMessage.textContent = "신청 정보가 저장되었습니다. 곧 안내를 보내드릴게요.";
         leadForm.reset();
+        closeLeadModal();
+        showThanksToast();
       } catch (error) {
         leadMessage.textContent = "저장에 실패했습니다. 잠시 후 다시 시도해주세요.";
       }
