@@ -863,14 +863,6 @@
 
     let activeView = "overviewView";
 
-    function getDashboardToken() {
-      return window.localStorage.getItem("duriseogi_dashboard_token") || "";
-    }
-
-    function saveDashboardToken(token) {
-      window.localStorage.setItem("duriseogi_dashboard_token", token);
-    }
-
     function formatNumber(value) {
       return new Intl.NumberFormat("ko-KR").format(value || 0);
     }
@@ -994,16 +986,14 @@
     }
 
     async function loadAnalytics() {
-      const token = getDashboardToken();
-      const response = await fetch("/api/analytics", {
-        headers: token ? { "x-dashboard-token": token } : {}
-      });
+      let response = await fetch("/api/analytics");
 
       if (response.status === 401) {
         const nextToken = window.prompt("대시보드 접근 토큰을 입력해주세요.");
         if (nextToken) {
-          saveDashboardToken(nextToken);
-          return loadAnalytics();
+          response = await fetch("/api/analytics", {
+            headers: { "x-dashboard-token": nextToken }
+          });
         }
       }
 
@@ -1029,10 +1019,14 @@
     }
 
     async function loadLeads() {
-      let token = getDashboardToken();
+      let token = "";
       if (!token) {
         token = window.prompt("신청자 목록을 보려면 대시보드 접근 토큰을 입력해주세요.") || "";
-        if (token) saveDashboardToken(token);
+        if (!token) {
+          elements.leadsTable.innerHTML = `<tr><td colspan="5">토큰 입력이 취소되었습니다.</td></tr>`;
+          elements.leadsUpdated.textContent = "인증 필요";
+          return;
+        }
       }
 
       const response = await fetch("/api/leads-list", {
@@ -1046,8 +1040,7 @@
       }
 
       if (response.status === 401) {
-        window.localStorage.removeItem("duriseogi_dashboard_token");
-        elements.leadsTable.innerHTML = `<tr><td colspan="5">토큰이 올바르지 않습니다. 새로고침 후 다시 입력해주세요.</td></tr>`;
+        elements.leadsTable.innerHTML = `<tr><td colspan="5">토큰이 올바르지 않습니다. 신청자 목록 탭을 다시 열거나 새로고침을 눌러 다시 입력해주세요.</td></tr>`;
         elements.leadsUpdated.textContent = "인증 실패";
         return;
       }
