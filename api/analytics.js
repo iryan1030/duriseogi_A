@@ -18,15 +18,6 @@ function getSupabaseConfig() {
   };
 }
 
-function requireDashboardToken(req) {
-  const token = process.env.DASHBOARD_TOKEN;
-  if (!token) return true;
-
-  const headerToken = String(req.headers["x-dashboard-token"] || "");
-  const queryToken = new URL(req.url, "https://duriseogi.local").searchParams.get("token") || "";
-  return headerToken === token || queryToken === token;
-}
-
 async function supabaseSelect(path) {
   const { url, serviceRoleKey } = getSupabaseConfig();
   const response = await fetch(`${url}/rest/v1/${path}`, {
@@ -122,11 +113,6 @@ function buildSummary(events, leads, dateKeys) {
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
     send(res, 405, { ok: false, error: "method_not_allowed" });
-    return;
-  }
-
-  if (!requireDashboardToken(req)) {
-    send(res, 401, { ok: false, error: "unauthorized" });
     return;
   }
 

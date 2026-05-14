@@ -1047,16 +1047,7 @@
     }
 
     async function loadAnalytics() {
-      let response = await fetch("/api/analytics");
-
-      if (response.status === 401) {
-        const nextToken = window.prompt("대시보드 접근 토큰을 입력해주세요.");
-        if (nextToken) {
-          response = await fetch("/api/analytics", {
-            headers: { "x-dashboard-token": nextToken }
-          });
-        }
-      }
+      const response = await fetch("/api/analytics");
 
       if (!response.ok) throw new Error("analytics_failed");
       const data = await response.json();
